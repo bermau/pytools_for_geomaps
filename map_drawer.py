@@ -103,7 +103,7 @@ class Mapper:
             for nom_ville in self.villes:
                 coord = self.villes[nom_ville]["coord"]
                 print(f"coord vaut {coord}")
-                long, lat = self.map(coord[0], coord[1])
+                long, lat = self.map(coord[1], coord[0])
 
                 # Attention : plot attend x puis y (soit longitude puis latitude).
                 self.map.plot(long, lat,  'ro', markersize=5)
@@ -143,7 +143,7 @@ if __name__ == '__main__':
         'Birmingham': {'label': "S"},
         # Ajout d'une ville avec des coordonnées GPS (latitude, longitude)
         'Ville 1': {'coord': (53.5074, -1.2578), 'label': 'E'},
-        'Ville 2': {'coord': (-1.2578, 53.5074), 'label': 'E'}
+        'Ville 2': {'coord': (-1.7578, 50.5074), 'label': 'E'}
     }
 
     cache_name = './maps/geo_cache.pickle'
