@@ -12,18 +12,23 @@ from pprint import pprint
 # Initialisation du géocodeur
 geolocator = Nominatim(user_agent="my_app")
 
-
-# Fonction pour récupérer les coordonnées d'une ville en utilisant le cache
-def get_coordinates(city):
+# A propos des coordonnées : il est préférable d'utiliser l'ordre (latitude, longitude). C'est l'ordre généralement
+# utilisé dans les systèmes de navigation GPS et dans les outils de cartographie. Fonction pour récupérer les
+# coordonnées d'une ville en utilisant le cache. Attention au fait que plot de matplolib attend par défaut l'ordre
+# inverse.
+def get_coordinates(city ):
     if city in geocode_cache:
         # Récupérer les coordonnées à partir du cache
         return geocode_cache[city]
     else:
         # Géolocaliser la ville
+        print(f"Pas en cache : {city}")
         location = geolocator.geocode(city)
+        print(f"Réponse de geocode: {location}")
+        print(f"latitude, longitude : {location.latitude}, {location.longitude}, ")
         if location is not None:
             # Enregistrer les coordonnées dans le cache
-            geocode_cache[city] = (location.latitude, location.longitude)
+            geocode_cache[city] = ( location.latitude, location.longitude,)
             return geocode_cache[city]
         else:
             return None
@@ -87,18 +92,21 @@ class Mapper:
                 coordinates = self.villes[nom_ville].get('coord', None)
                 if coordinates is None:
                     location = get_coordinates(nom_ville + ', UK')
-
                     if location is not None:
                         coord = (location[0], location[1])
                         self.villes[nom_ville]['coord'] = coord
+
             print("Avant de placer les villes, voici les données de self.villes")
             pprint(self.villes)
 
             # ajouter des marqueurs pour chaque ville avec leur nom
             for nom_ville in self.villes:
                 coord = self.villes[nom_ville]["coord"]
+                print(f"coord vaut {coord}")
                 long, lat = self.map(coord[0], coord[1])
-                self.map.plot(long, lat, 'ro', markersize=5)
+
+                # Attention : plot attend x puis y (soit longitude puis latitude).
+                self.map.plot(long, lat,  'ro', markersize=5)
                 distance = 0.05 * (self.map.urcrnry - self.map.llcrnry)
                 pos_label = self.villes[nom_ville].get('label', 'N')
 
@@ -133,8 +141,9 @@ if __name__ == '__main__':
         'Manchester': {'label': "NE"},
         'Liverpool': {'label': "SW"},
         'Birmingham': {'label': "S"},
-        # Ajout d'une ville avec des coordonnées GPS (longitude, latitude)
-        'Ville Inconnue': {'coord': (-1.2578, 53.5074), 'label': 'E'}
+        # Ajout d'une ville avec des coordonnées GPS (latitude, longitude)
+        'Ville 1': {'coord': (53.5074, -1.2578), 'label': 'E'},
+        'Ville 2': {'coord': (-1.2578, 53.5074), 'label': 'E'}
     }
 
     cache_name = './maps/geo_cache.pickle'
