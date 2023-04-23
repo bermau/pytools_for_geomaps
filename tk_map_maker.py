@@ -5,17 +5,17 @@ from io import BytesIO
 from svglib.svglib import svg2rlg
 from reportlab.graphics import renderPDF, renderPM
 from PIL import Image, ImageTk
-
+from map_drawer import Mapper
 
 class MapApp:
     def __init__(self, master):
         self.master = master
-        master.title("Carte SVG")
+        master.title("Mes cartes de géographie")
 
         self.label_country = tk.Label(master, text="Pays :")
         self.label_country.pack()
         self.selected_country = tk.StringVar(value="Angleterre")
-        self.option_country = tk.OptionMenu(master, self.selected_country, "Angleterre", "France", "Allemagne")
+        self.option_country = tk.OptionMenu(master, self.selected_country, "Angleterre", "France", "Espagne")
         self.option_country.pack()
 
         self.button_map = tk.Button(master, text="Afficher la carte", command=self.display_map)
@@ -26,10 +26,13 @@ class MapApp:
 
     def display_map(self):
         country = self.selected_country.get()
-        # response = requests.get(f"https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/{country}_location_map.svg/800px-{country}_location_map.svg.png")
-        # img = Image.open(BytesIO(response.content))
 
-        drawing = svg2rlg("./maps/Angleterre.svg")
+        map = Mapper(country, country, None)
+        map.creer_carte()
+        map.dessine_villes()
+        map.save_svg()
+
+        drawing = svg2rlg("./maps/tempo.svg")
         renderPM.drawToFile(drawing, "./maps/temp.png", fmt="PNG")
 
         img = Image.open("./maps/temp.png")
