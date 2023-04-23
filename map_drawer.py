@@ -39,6 +39,7 @@ class MyMapper:
 
         # ajouter un titre général à la carte
         plt.title(self.title)
+        plt.savefig(f"./maps/{self.country}.svg")
 
     def dessine_villes(self):
         """Affiche les villes et leur label"""
