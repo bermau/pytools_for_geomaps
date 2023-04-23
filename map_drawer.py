@@ -1,7 +1,44 @@
+import pickle
+
 import matplotlib.pyplot as plt
 from mpl_toolkits.basemap import Basemap
 from geopy.geocoders import Nominatim
+
 from pprint import pprint
+
+# Création d'un cache pour stocker les résultats géocodés
+# geocode_cache = {}
+
+# Initialisation du géocodeur
+geolocator = Nominatim(user_agent="my_app")
+
+
+# Fonction pour récupérer les coordonnées d'une ville en utilisant le cache
+def get_coordinates(city):
+    if city in geocode_cache:
+        # Récupérer les coordonnées à partir du cache
+        return geocode_cache[city]
+    else:
+        # Géolocaliser la ville
+        location = geolocator.geocode(city)
+        if location is not None:
+            # Enregistrer les coordonnées dans le cache
+            geocode_cache[city] = (location.latitude, location.longitude)
+            return geocode_cache[city]
+        else:
+            return None
+
+
+# Enregistrer le cache dans un fichier
+def save_geocache(fname='geo_cache.pickle'):
+    with open(fname, 'wb') as f:
+        pickle.dump(geocode_cache, f, pickle.HIGHEST_PROTOCOL)
+
+
+def load_geocache(fname='geo_cache.pickle'):
+    with open(fname, 'rb') as f:
+        pick = pickle.load(f)
+    return pick
 
 
 class Mapper:
@@ -21,10 +58,10 @@ class Mapper:
         # provoquer des erreurs avec la projection mercator.
 
         if self.country in ["Angleterre", 'en']:
-            self.map = Basemap(llcrnrlon=-6, llcrnrlat=49, urcrnrlon=2, urcrnrlat=59, resolution='i', projection='merc',
+            self.map = Basemap(llcrnrlon=-8, llcrnrlat=49, urcrnrlon=2, urcrnrlat=59, resolution='i', projection='merc',
                                lat_0=54.5, lon_0=-4.36)
         elif self.country in ["France", 'fr']:
-            self.map = Basemap(llcrnrlon=-5, llcrnrlat=41, urcrnrlon=10, urcrnrlat=51, resolution='i',
+            self.map = Basemap(llcrnrlon=-5, llcrnrlat=43, urcrnrlon=10, urcrnrlat=51, resolution='i',
                                projection='merc',
                                lat_0=46, lon_0=2)
         elif self.country in ["Espagne", 'sp']:
@@ -39,29 +76,31 @@ class Mapper:
 
         # ajouter un titre général à la carte
         plt.title(self.title)
-        plt.savefig(f"./maps/{self.country}.svg")
+
 
     def dessine_villes(self):
         """Affiche les villes et leur label"""
-        self.creer_carte()
         # extraire les coordonnées de chaque ville depuis la base de données OpenStreetMap
-        geolocator = Nominatim(user_agent='my_app')
+
         if self.villes:
-            for ville in self.villes:
-                coordinates = self.villes[ville].get('coord', None)
+            for nom_ville in self.villes:
+                coordinates = self.villes[nom_ville].get('coord', None)
                 if coordinates is None:
-                    location = geolocator.geocode(ville + ', UK')
+                    location = get_coordinates(nom_ville + ', UK')
+
                     if location is not None:
-                        coord = (location.longitude, location.latitude)
-                        self.villes[ville]['coord'] = coord
+                        coord = (location[0], location[1])
+                        self.villes[nom_ville]['coord'] = coord
+            print("Avant de placer les villes, voici les données de self.villes")
             pprint(self.villes)
+
             # ajouter des marqueurs pour chaque ville avec leur nom
-            for nom in self.villes:
-                coord = self.villes[nom]["coord"]
+            for nom_ville in self.villes:
+                coord = self.villes[nom_ville]["coord"]
                 long, lat = self.map(coord[0], coord[1])
                 self.map.plot(long, lat, 'ro', markersize=5)
                 distance = 0.05 * (self.map.urcrnry - self.map.llcrnry)
-                pos_label = self.villes[nom].get('label', 'N')
+                pos_label = self.villes[nom_ville].get('label', 'N')
 
                 positions = {
                     'N': (long, lat + distance, 'center', 'bottom'),
@@ -76,12 +115,13 @@ class Mapper:
 
                 if pos_label in positions:
                     position = positions[pos_label]
-                    plt.text(position[0], position[1], nom, fontsize=10, ha=position[2], va=position[3], color='red')
+                    plt.text(position[0], position[1], nom_ville, fontsize=10, ha=position[2], va=position[3], color='red')
                 else:
                     print('Position inconnue')
 
     def save_svg(self):
         plt.savefig("./maps/tempo.svg")
+        plt.savefig(f"./maps/{self.country}.svg")
 
 
 if __name__ == '__main__':
@@ -97,9 +137,20 @@ if __name__ == '__main__':
         'Ville Inconnue': {'coord': (-1.2578, 53.5074), 'label': 'E'}
     }
 
-    map = Mapper(country='fr', title="Quelques villes d'Angleterre", points=villes)
+    cache_name = './maps/geo_cache.pickle'
+    try:
+        geocode_cache = load_geocache(cache_name)
+        print("J'ai chargé le cache des données géographiques.")
+    except:
+        print(f"Pas de fichier {cache_name}")
+        geocode_cache = {}
+
+    print(f"geocode_cache = {geocode_cache}")
+
+    map = Mapper(country='en', title="Quelques villes d'Angleterre", points=villes)
     map.creer_carte()
     map.dessine_villes()
 
     # afficher la carte
     plt.show()
+    save_geocache(cache_name)
