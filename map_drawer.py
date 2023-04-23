@@ -6,20 +6,31 @@ from pprint import pprint
 
 class MyMapper:
 
-    def __init__(self, title):
+    def __init__(self, country, title, points):
         self.map = None
+        self.country = country
         self.title = title
+        self.villes = points
 
     def creer_carte(self):
         # créer une carte basée sur les coordonnées du pays
-
         # J'ai ajouté deux nouveaux paramètres à la fonction Basemap pour spécifier la projection de la carte (
         # projection='merc') et les coordonnées du centre de la carte (lat_0 = 54.5, lon_0 = -4.36). Ces paramètres
         # permettent d'ajuster la projection de la carte pour mieux s'adapter aux dimensions de l'Angleterre et
         # éviter que le nord ne soit écrasé. Notez que j'ai également retiré le paramètre resolution='h' car il peut
         # provoquer des erreurs avec la projection mercator.
-        self.map = Basemap(llcrnrlon=-7, llcrnrlat=49, urcrnrlon=2, urcrnrlat=59,
-            resolution='i', projection='merc', lat_0=54.5, lon_0=-4.36)
+
+        if self.country in ["Angleterre", 'en']:
+            self.map = Basemap(llcrnrlon=-6, llcrnrlat=49, urcrnrlon=2, urcrnrlat=59, resolution='i', projection='merc',
+                               lat_0=54.5, lon_0=-4.36)
+        elif self.country in ["France", 'fr']:
+            self.map = Basemap(llcrnrlon=-5, llcrnrlat=41, urcrnrlon=10, urcrnrlat=51, resolution='i',
+                               projection='merc',
+                               lat_0=46, lon_0=2)
+        elif self.country in ["Espagne", 'sp']:
+            self.map = Basemap(llcrnrlon=-10, llcrnrlat=34, urcrnrlon=4, urcrnrlat=44, resolution='i',
+                               projection='merc',
+                               lat_0=39, lon_0=-3)
 
         # dessiner les côtes et les frontières
         self.map.drawcoastlines(linewidth=0.5)
@@ -34,21 +45,21 @@ class MyMapper:
         self.creer_carte()
         # extraire les coordonnées de chaque ville depuis la base de données OpenStreetMap
         geolocator = Nominatim(user_agent='my_app')
-        for ville in villes:
-            coordinates = villes[ville].get('coord', None)
+        for ville in self.villes:
+            coordinates = self.villes[ville].get('coord', None)
             if coordinates is None:
                 location = geolocator.geocode(ville + ', UK')
                 if location is not None:
                     coord = (location.longitude, location.latitude)
-                    villes[ville]['coord'] = coord
-        pprint(villes)
+                    self.villes[ville]['coord'] = coord
+        pprint(self.villes)
         # ajouter des marqueurs pour chaque ville avec leur nom
-        for nom in villes:
-            coord = villes[nom]["coord"]
+        for nom in self.villes:
+            coord = self.villes[nom]["coord"]
             long, lat = self.map(coord[0], coord[1])
             self.map.plot(long, lat, 'ro', markersize=5)
             distance = 0.05 * (self.map.urcrnry - self.map.llcrnry)
-            pos_label = villes[nom].get('label', 'N')
+            pos_label = self.villes[nom].get('label', 'N')
 
             positions = {
                 'N': (long, lat + distance, 'center', 'bottom'),
@@ -69,11 +80,8 @@ class MyMapper:
 
 
 if __name__ == '__main__':
-    # paramétrer les villes avec un dictionnaire. Par défaut recherche dans OpenStreMap.
+    # On paramétre les villes avec un dictionnaire. Par défaut recherche dans OpenStreetMap.
     # on peut indiquer la position GPS, et la position de l'étiquette.
-
-
-
     villes = {
         'Londres': {'label': "S"},
         'Cambridge': {'label': "NE"},
@@ -84,7 +92,7 @@ if __name__ == '__main__':
         'Ville Inconnue': {'coord': (-1.2578, 53.5074), 'label': 'E'}
     }
 
-    map = MyMapper(title="Quelques villes d'Angleterre")
+    map = MyMapper(country='fr', title="Quelques villes d'Angleterre", points=villes)
     map.creer_carte()
     map.dessine_villes()
 
