@@ -4,7 +4,7 @@ from geopy.geocoders import Nominatim
 from pprint import pprint
 
 
-class MyMapper:
+class Mapper:
 
     def __init__(self, country, title, points):
         self.map = None
@@ -46,38 +46,42 @@ class MyMapper:
         self.creer_carte()
         # extraire les coordonnées de chaque ville depuis la base de données OpenStreetMap
         geolocator = Nominatim(user_agent='my_app')
-        for ville in self.villes:
-            coordinates = self.villes[ville].get('coord', None)
-            if coordinates is None:
-                location = geolocator.geocode(ville + ', UK')
-                if location is not None:
-                    coord = (location.longitude, location.latitude)
-                    self.villes[ville]['coord'] = coord
-        pprint(self.villes)
-        # ajouter des marqueurs pour chaque ville avec leur nom
-        for nom in self.villes:
-            coord = self.villes[nom]["coord"]
-            long, lat = self.map(coord[0], coord[1])
-            self.map.plot(long, lat, 'ro', markersize=5)
-            distance = 0.05 * (self.map.urcrnry - self.map.llcrnry)
-            pos_label = self.villes[nom].get('label', 'N')
+        if self.villes:
+            for ville in self.villes:
+                coordinates = self.villes[ville].get('coord', None)
+                if coordinates is None:
+                    location = geolocator.geocode(ville + ', UK')
+                    if location is not None:
+                        coord = (location.longitude, location.latitude)
+                        self.villes[ville]['coord'] = coord
+            pprint(self.villes)
+            # ajouter des marqueurs pour chaque ville avec leur nom
+            for nom in self.villes:
+                coord = self.villes[nom]["coord"]
+                long, lat = self.map(coord[0], coord[1])
+                self.map.plot(long, lat, 'ro', markersize=5)
+                distance = 0.05 * (self.map.urcrnry - self.map.llcrnry)
+                pos_label = self.villes[nom].get('label', 'N')
 
-            positions = {
-                'N': (long, lat + distance, 'center', 'bottom'),
-                'S': (long, lat - distance, 'center', 'top'),
-                'E': (long + distance, lat, 'left', 'center'),
-                'W': (long - distance, lat, 'right', 'center'),
-                'NE': (long + distance, lat + distance, 'left', 'bottom'),
-                'NW': (long - distance, lat + distance, 'right', 'bottom'),
-                'SE': (long + distance, lat - distance, 'left', 'top'),
-                'SW': (long - distance, lat - distance, 'right', 'top')
-            }
+                positions = {
+                    'N': (long, lat + distance, 'center', 'bottom'),
+                    'S': (long, lat - distance, 'center', 'top'),
+                    'E': (long + distance, lat, 'left', 'center'),
+                    'W': (long - distance, lat, 'right', 'center'),
+                    'NE': (long + distance, lat + distance, 'left', 'bottom'),
+                    'NW': (long - distance, lat + distance, 'right', 'bottom'),
+                    'SE': (long + distance, lat - distance, 'left', 'top'),
+                    'SW': (long - distance, lat - distance, 'right', 'top')
+                }
 
-            if pos_label in positions:
-                position = positions[pos_label]
-                plt.text(position[0], position[1], nom, fontsize=10, ha=position[2], va=position[3], color='red')
-            else:
-                print('Position inconnue')
+                if pos_label in positions:
+                    position = positions[pos_label]
+                    plt.text(position[0], position[1], nom, fontsize=10, ha=position[2], va=position[3], color='red')
+                else:
+                    print('Position inconnue')
+
+    def save_svg(self):
+        plt.savefig("./maps/tempo.svg")
 
 
 if __name__ == '__main__':
@@ -93,7 +97,7 @@ if __name__ == '__main__':
         'Ville Inconnue': {'coord': (-1.2578, 53.5074), 'label': 'E'}
     }
 
-    map = MyMapper(country='fr', title="Quelques villes d'Angleterre", points=villes)
+    map = Mapper(country='fr', title="Quelques villes d'Angleterre", points=villes)
     map.creer_carte()
     map.dessine_villes()
 
