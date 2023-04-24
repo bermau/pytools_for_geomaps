@@ -22,10 +22,7 @@ def get_coordinates(city ):
         return geocode_cache[city]
     else:
         # Géolocaliser la ville
-        print(f"Pas en cache : {city}")
         location = geolocator.geocode(city)
-        print(f"Réponse de geocode: {location}")
-        print(f"latitude, longitude : {location.latitude}, {location.longitude}, ")
         if location is not None:
             # Enregistrer les coordonnées dans le cache
             geocode_cache[city] = ( location.latitude, location.longitude,)
