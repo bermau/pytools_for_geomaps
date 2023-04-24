@@ -1,11 +1,10 @@
+"""Tk interface to create maps."""
 import tkinter as tk
-# import requests
-from io import BytesIO
-
 from svglib.svglib import svg2rlg
 from reportlab.graphics import renderPDF, renderPM
 from PIL import Image, ImageTk
 from map_drawer import Mapper
+
 
 class MapApp:
     def __init__(self, master):
