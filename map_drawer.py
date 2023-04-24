@@ -58,7 +58,7 @@ class Mapper:
         # permettent d'ajuster la projection de la carte pour mieux s'adapter aux dimensions de l'Angleterre et
         # éviter que le nord ne soit écrasé. Notez que j'ai également retiré le paramètre resolution='h' car il peut
         # provoquer des erreurs avec la projection mercator.
-
+        plt.clf()
         if self.country in ["Angleterre", 'en']:
             self.map = Basemap(llcrnrlon=-8, llcrnrlat=49, urcrnrlon=2, urcrnrlat=59, resolution='i', projection='merc',
                                lat_0=54.5, lon_0=-4.36)
@@ -159,4 +159,8 @@ if __name__ == '__main__':
 
     # afficher la carte
     plt.show()
-    save_geocache(cache_name)
+
+    input("Etapte 2...")
+    map.country= 'fr'
+    map.creer_carte()
+    plt.show()
