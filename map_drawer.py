@@ -132,13 +132,14 @@ if __name__ == '__main__':
     # On peut indiquer la position GPS, et la position de l'étiquette.
     villes = {
         'Londres': {'label': "S"},
-        'Cambridge': {'label': "NE"},
-        'Manchester': {'label': "NE"},
-        'Liverpool': {'label': "SW"},
-        'Birmingham': {'label': "S"},
+        # 'Cambridge': {'label': "NE"},
+        # 'Manchester': {'label': "NE"},
+        'Blenheim Palace': {'label': "SW"},
+        'Chartwell': {'label': "SW"},
+
+        # 'Birmingham': {'label': "S"},
         # Ajout d'une ville avec des coordonnées GPS (latitude, longitude)
         'Ville 1': {'coord': (53.5074, -1.2578), 'label': 'E'},
-        'Ville 2': {'coord': (-1.7578, 50.5074), 'label': 'E'}
     }
 
     cache_name = './maps/geo_cache.pickle'
@@ -158,7 +159,3 @@ if __name__ == '__main__':
     # afficher la carte d'Angleterre
     plt.show()
 
-    input("Etape 2, la carte va être remplacée par une carte de France...")
-    map.country= 'fr'
-    map.creer_carte()
-    plt.show()
