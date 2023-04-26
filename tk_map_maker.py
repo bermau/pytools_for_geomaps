@@ -19,10 +19,10 @@ class MapApp:
         self.option_country.pack()
 
         self.button_map = tk.Button(master, text="Afficher la carte", command=self.display_map)
-        self.button_map.pack()
+        self.button_map.pack(side="right")
 
         self.canvas = tk.Canvas(master, width=800, height=600)
-        self.canvas.pack()
+        self.canvas.pack(side="bottom")
 
     def display_map(self):
         country = self.selected_country.get()

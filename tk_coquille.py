@@ -12,13 +12,16 @@ class Application(tk.Frame):
         super().__init__(master)
         self.racine = master
 
+        self.frame_haut = tk.Frame(self.racine)
+        self.frame_haut.pack()
+
         # créer le widget d'entrée de texte
-        self.entree_texte = tk.Entry(self.racine)
-        self.entree_texte.pack()
+        self.entree_texte = tk.Entry(self.frame_haut)
+        self.entree_texte.pack(side = "left")
 
         # créer le bouton de validation
-        self.bouton_valider = tk.Button(self.racine, text="Valider", command=self.valider_entree)
-        self.bouton_valider.pack()
+        self.bouton_valider = tk.Button(self.frame_haut, text="Valider", command=self.valider_entree)
+        self.bouton_valider.pack(side="left")
 
         # créer la zone de texte pour afficher le résultat
         self.zone_texte = tk.Text(self.racine)
