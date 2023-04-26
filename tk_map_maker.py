@@ -14,7 +14,8 @@ class MapApp:
         self.label_country = tk.Label(master, text="Pays :")
         self.label_country.pack()
         self.selected_country = tk.StringVar(value="Angleterre")
-        self.option_country = tk.OptionMenu(master, self.selected_country, "Angleterre", "France", "Espagne")
+        self.option_country = tk.OptionMenu(master, self.selected_country,
+                                            "Angleterre", "France", "Espagne")
         self.option_country.pack()
 
         self.button_map = tk.Button(master, text="Afficher la carte", command=self.display_map)

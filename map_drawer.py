@@ -1,9 +1,7 @@
 import pickle
-
 import matplotlib.pyplot as plt
 from mpl_toolkits.basemap import Basemap
 from geopy.geocoders import Nominatim
-
 from pprint import pprint
 
 # Création d'un cache pour stocker les résultats géocodés
@@ -25,7 +23,7 @@ def get_coordinates(city ):
         location = geolocator.geocode(city)
         if location is not None:
             # Enregistrer les coordonnées dans le cache
-            geocode_cache[city] = ( location.latitude, location.longitude,)
+            geocode_cache[city] = (location.latitude, location.longitude)
             return geocode_cache[city]
         else:
             return None
@@ -130,8 +128,8 @@ class Mapper:
 
 
 if __name__ == '__main__':
-    # On paramétre les villes avec un dictionnaire. Par défaut recherche dans OpenStreetMap.
-    # on peut indiquer la position GPS, et la position de l'étiquette.
+    # On paramètre les villes avec un dictionnaire. Par défaut recherche dans OpenStreetMap.
+    # On peut indiquer la position GPS, et la position de l'étiquette.
     villes = {
         'Londres': {'label': "S"},
         'Cambridge': {'label': "NE"},
@@ -157,10 +155,10 @@ if __name__ == '__main__':
     map.creer_carte()
     map.dessine_villes()
 
-    # afficher la carte
+    # afficher la carte d'Angleterre
     plt.show()
 
-    input("Etapte 2...")
+    input("Etape 2, la carte va être remplacée par une carte de France...")
     map.country= 'fr'
     map.creer_carte()
     plt.show()
