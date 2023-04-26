@@ -8,7 +8,6 @@ def transformer_texte(texte):
 
 class Application(tk.Frame):
     def __init__(self, master=None):
-        # tk.Frame.__init__(self, racine)
         super().__init__(master)
         self.racine = master
 
