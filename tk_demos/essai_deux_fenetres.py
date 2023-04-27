@@ -7,8 +7,7 @@ class DeuxiemeFenetre(tk.Toplevel):
     def __init__(self, parent):
         super().__init__(parent)
         self.parent = parent
-        self.resultat = None
-
+        self.result = None
         # Ajoutez ici les widgets que vous souhaitez dans votre deuxième fenêtre
 
 
@@ -23,14 +22,14 @@ class PremiereFenetre(tk.Tk):
         fenetre = DeuxiemeFenetre(self)
         fenetre.grab_set() # Empêche l'utilisateur d'interagir avec la première fenêtre tant que la deuxième est ouverte
         self.wait_window(fenetre) # Attend que la deuxième fenêtre soit fermée
-        self.resultat_deuxieme_fenetre = fenetre.resultat
+        self.resultat_deuxieme_fenetre = fenetre.result
 
 
 class DeuxiemeFenetre(tk.Toplevel):
     def __init__(self, parent):
         super().__init__(parent)
         self.parent = parent
-        self.resultat = None
+        self.result = None
 
         # Ajoutez ici les widgets que vous souhaitez dans votre deuxième fenêtre
 
@@ -38,8 +37,8 @@ class DeuxiemeFenetre(tk.Toplevel):
         tk.Button(self, text="Fermer", command=self.fermer_fenetre).pack()
 
     def fermer_fenetre(self):
-        # Mettez à jour la variable resultat avec le résultat de la deuxième fenêtre
-        self.resultat = "Résultat de la deuxième fenêtre"
+        # Mettez à jour la variable result avec le résultat de la deuxième fenêtre
+        self.result = "Résultat de la deuxième fenêtre"
 
         # Fermez la fenêtre
         self.destroy()
@@ -64,7 +63,7 @@ class PremiereFenetre(tk.Frame):
         fenetre = DeuxiemeFenetre(self)
         fenetre.grab_set() # Empêche l'utilisateur d'interagir avec la première fenêtre tant que la deuxième est ouverte
         self.wait_window(fenetre) # Attend que la deuxième fenêtre soit fermée
-        self.resultat_deuxieme_fenetre = fenetre.resultat
+        self.resultat_deuxieme_fenetre = fenetre.result
         print(f"La fenêtre a reçu {self.resultat_deuxieme_fenetre}")
 
 if __name__ == '__main__':
