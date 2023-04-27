@@ -1,7 +1,7 @@
 """
 Trouve un emplacement sur Nominatim à partir d'une saisie de l'utilisateur. 
-""""""
 """
+
 from geopy import Nominatim
 
 def find_location(query):
