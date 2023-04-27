@@ -131,7 +131,7 @@ if __name__ == '__main__':
     # On paramètre les villes avec un dictionnaire. Par défaut recherche dans OpenStreetMap.
     # On peut indiquer la position GPS, et la position de l'étiquette.
     villes = {
-        'Londres': {'label': "S"},
+        'Londres': {'label': "NE"},
         # 'Cambridge': {'label': "NE"},
         # 'Manchester': {'label': "NE"},
         'Blenheim Palace': {'label': "SW"},
@@ -139,7 +139,7 @@ if __name__ == '__main__':
 
         # 'Birmingham': {'label': "S"},
         # Ajout d'une ville avec des coordonnées GPS (latitude, longitude)
-        'Ville 1': {'coord': (53.5074, -1.2578), 'label': 'E'},
+        'Ville quelconque': {'coord': (53.5074, -1.2578), 'label': 'E'},
     }
 
     cache_name = './maps/geo_cache.pickle'
@@ -152,7 +152,7 @@ if __name__ == '__main__':
 
     print(f"geocode_cache = {geocode_cache}")
 
-    map = Mapper(country='en', title="Quelques villes d'Angleterre", points=villes)
+    map = Mapper(country='en', title="Quelques villes d'Angleterre concernant W.S. Churchill", points=villes)
     map.creer_carte()
     map.dessine_villes()
 
