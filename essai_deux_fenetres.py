@@ -44,5 +44,5 @@ class DeuxiemeFenetre(tk.Toplevel):
 
 if __name__ == '__main__':
     root = tk.Tk()
-    app = PremiereFenetre(root)
+    fenetre1 = PremiereFenetre(root)
     root.mainloop()

@@ -16,11 +16,18 @@ def extract_name_coord(string):
     return champs_lst[0], champs_lst[-3], champs_lst[-2]
 
 
-class Application(tk.Frame):
-    def __init__(self, master=None):
-        super().__init__(master)
-        self.coord_result = None
+# Volontairement Cette classe ne dérive pas de d'une classe de tk.
+# Elle est destinée à être un attribut d'une classe de tk.
+class TkGeoLocator:
+    """
+    Ouvre une fenêtre pour sélectionner un lieu.
+    """
+
+    def __init__(self, master):
         self.racine = master
+        self.frame = tk.Frame(self.racine)
+        self.racine.title("Trouver une ville")
+        self.coord_result = None  # pour renvoyer le résultat
 
         self.frame_haut = tk.Frame(self.racine)
         self.frame_haut.pack()
@@ -60,6 +67,7 @@ class Application(tk.Frame):
         # raccourcis clavier
         self.entree_texte.bind("<Return>", lambda event: self.bouton_valider.invoke())
         self.entree_texte.focus_set()
+        self.frame.pack()
 
     # fonction qui est appelée quand on appuie sur le bouton
     def valider_entree(self):
@@ -88,7 +96,9 @@ class Application(tk.Frame):
     def on_click_choose(self):
         """Sortir de la fenêtre en renvoyer les valeurs"""
         print(self.entry_loc_name.get(), self.entry_loc_lat.get(), self.entry_loc_long.get())
-        return self.entry_loc_name.get(), self.entry_loc_lat.get(), self.entry_loc_long.get()
+        self.coord_result = self.entry_loc_name.get(), self.entry_loc_lat.get(), self.entry_loc_long.get()
+
+        self.racine.destroy()
 
 
 if __name__ == '__main__':
@@ -96,7 +106,7 @@ if __name__ == '__main__':
 
     root = tk.Tk()
     root.title("Chercher une localité")
-    app = Application(master=root)
+    app = TkGeoLocator(master=root)
 
     # lancer la boucle principale de l'interface graphique
     root.mainloop()

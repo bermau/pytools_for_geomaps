@@ -61,7 +61,7 @@ class Mapper:
             self.map = Basemap(llcrnrlon=-8, llcrnrlat=49, urcrnrlon=2, urcrnrlat=59, resolution='i', projection='merc',
                                lat_0=54.5, lon_0=-4.36)
         elif self.country in ["France", 'fr']:
-            self.map = Basemap(llcrnrlon=-5, llcrnrlat=43, urcrnrlon=10, urcrnrlat=51, resolution='i',
+            self.map = Basemap(llcrnrlon=-5, llcrnrlat=42, urcrnrlon=10, urcrnrlat=51, resolution='i',
                                projection='merc',
                                lat_0=46, lon_0=2)
         elif self.country in ["Espagne", 'sp']:
@@ -126,6 +126,13 @@ class Mapper:
         plt.savefig("./maps/tempo.svg")
         plt.savefig(f"./maps/{self.country}.svg")
 
+cache_name = './maps/geo_cache.pickle'
+try:
+    geocode_cache = load_geocache(cache_name)
+    print("J'ai chargé le cache des données géographiques.")
+except:
+    print(f"Pas de fichier {cache_name}")
+    geocode_cache = {}
 
 if __name__ == '__main__':
     # On paramètre les villes avec un dictionnaire. Par défaut recherche dans OpenStreetMap.
@@ -142,13 +149,7 @@ if __name__ == '__main__':
         'Ville quelconque': {'coord': (53.5074, -1.2578), 'label': 'E'},
     }
 
-    cache_name = './maps/geo_cache.pickle'
-    try:
-        geocode_cache = load_geocache(cache_name)
-        print("J'ai chargé le cache des données géographiques.")
-    except:
-        print(f"Pas de fichier {cache_name}")
-        geocode_cache = {}
+
 
     print(f"geocode_cache = {geocode_cache}")
 
