@@ -2,17 +2,24 @@
 Find location of a city using a Tkinter interface.
 """
 import tkinter as tk
-from geopy import Nominatim
-# import map_drawer
 from find_location import find_location
+
 
 # fonction qui prend une entrée de texte et la transforme
 def find_locations(texte):
     return find_location(texte)
 
+
+def extract_name_coord(string):
+    print(type(string))
+    champs_lst = string.split(",")
+    return champs_lst[0], champs_lst[-3], champs_lst[-2]
+
+
 class Application(tk.Frame):
     def __init__(self, master=None):
         super().__init__(master)
+        self.coord_result = None
         self.racine = master
 
         self.frame_haut = tk.Frame(self.racine)
@@ -31,18 +38,32 @@ class Application(tk.Frame):
         self.zone_texte.pack()
 
         # créer le bouton de validation 2
-        self.bouton_selection = tk.Button(self.racine, text="Valider", command=self.on_click_selection)
+        self.bouton_selection = tk.Button(self.racine, text="Selection", command=self.on_click_selection)
         self.bouton_selection.pack()
 
-        # créer la zone de texte 2 (multilignes)
-        self.zone_texte2 = tk.Text(self.racine)
+        # créer la zone de texte 2 (quelques lignes)
+        self.zone_texte2 = tk.Text(self.racine, height=3)
         self.zone_texte2.pack()
+
+        # En dessous un Frame avec 3 champs, puis un bouton choisir
+        self.frame2 = tk.Frame(self.racine)
+        self.frame2.pack()
+        self.entry_loc_name = tk.Entry(self.frame2)
+        self.entry_loc_name.pack(side="left")
+        self.entry_loc_lat = tk.Entry(self.frame2)
+        self.entry_loc_lat.pack(side="left")
+        self.entry_loc_long = tk.Entry(self.frame2)
+        self.entry_loc_long.pack(side="left")
+        self.but_choisir = tk.Button(self.frame2, text="Choisir", command=self.on_click_choose)
+        self.but_choisir.pack(side="left")
 
         # raccourcis clavier
         self.entree_texte.bind("<Return>", lambda event: self.bouton_valider.invoke())
+        self.entree_texte.focus_set()
 
     # fonction qui est appelée quand on appuie sur le bouton
     def valider_entree(self):
+        """On a saisi Londres"""
         texte = self.entree_texte.get()
         result = find_locations(texte)
         print(result)
@@ -52,12 +73,22 @@ class Application(tk.Frame):
             self.zone_texte.insert(tk.END, str(line2) + "\n\n")
 
     def on_click_selection(self):
-        """récupérer la sélection dans la zone de texte 1"""
+        """Récupérer la sélection dans la zone de texte 1. On a souligné une ligne.
+        On veut extraire nom, latitude et longitude"""
         debut, fin = self.zone_texte.tag_ranges(tk.SEL)
         if debut and fin:
             selection = self.zone_texte.get(debut, fin)
             # afficher la sélection dans la zone de texte 2
             self.zone_texte2.insert(tk.END, selection + "\n")
+            triplet = extract_name_coord(selection)
+            self.entry_loc_name.insert(0, triplet[0])
+            self.entry_loc_lat.insert(0, triplet[1])
+            self.entry_loc_long.insert(0, triplet[2])
+
+    def on_click_choose(self):
+        """Sortir de la fenêtre en renvoyer les valeurs"""
+        print(self.entry_loc_name.get(), self.entry_loc_lat.get(), self.entry_loc_long.get())
+        return self.entry_loc_name.get(), self.entry_loc_lat.get(), self.entry_loc_long.get()
 
 
 if __name__ == '__main__':
@@ -65,7 +96,7 @@ if __name__ == '__main__':
 
     root = tk.Tk()
     root.title("Chercher une localité")
-    app = Application(master = root)
+    app = Application(master=root)
 
     # lancer la boucle principale de l'interface graphique
     root.mainloop()
