@@ -18,6 +18,16 @@ villes = {
 }
 
 
+def ajouter_ville(triplet):
+    """
+    Add a city and its location in the dictionary
+    :param triplet: (name, latitude, longitude)
+    :return: None
+    """
+    name, latitude, longitude = triplet
+    villes[name] = {'coord' : (float(latitude), float(longitude))}
+    print(f"Villes devient {villes}")
+
 # J'utilise une classe qui ne dérive pas d'une classe de tkinter.
 # https://stackoverflow.com/questions/16115378/tkinter-example-code-for-multiple-windows-why-wont-buttons-load-correctly
 class MapApp:
@@ -66,11 +76,20 @@ class MapApp:
 
     def ouvrir_fen_deux(self):
         """Ouvre une seconde fenêtre pour choisir un lieu"""
-        win2=tk.Toplevel(self.master) # MPas self, qui n'est pas tk, mais son père.
-        fen2 = TkGeoLocator(win2)  # self.ou self.master ??
-        # fen2.frame.grab_set()  # Empêche l'utilisateur d'interagir avec la première fenêtre tant que la deuxième est ouverte
-        # self.frame.wait_window(fen2)  # Attend que la deuxième fenêtre soit fermée
+        win2 = tk.Toplevel(self.master) # j'indique self.master et non pas self, qui n'est pas tk, mais son père.
+        fen2 = TkGeoLocator(win2)
+
+        fen2.frame.grab_set()  # le frame de cette fenêtre récupère tous les signaux
+        self.frame.wait_window(fen2.frame)  # Attend que la deuxième fenêtre soit fermée (important :
+        # Found my solution reading :
+        # https://stackoverflow.com/questions/48292632/how-to-correctly-implement-wait-window
+
         self.resultat_deuxieme_fenetre = fen2.coord_result
+        if self.resultat_deuxieme_fenetre:
+            print(f"Il faut ajouter la ville : {self.resultat_deuxieme_fenetre}")
+            ajouter_ville(self.resultat_deuxieme_fenetre)
+        else:
+            print(f"Rien de neuf !")
 
 
 if __name__ == '__main__':

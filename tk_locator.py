@@ -23,13 +23,13 @@ class TkGeoLocator:
     Ouvre une fenêtre pour sélectionner un lieu.
     """
 
-    def __init__(self, master):
-        self.racine = master
+    def __init__(self, tk_master):
+        self.racine = tk_master
+        # self.racine.title("Trouver une ville")
         self.frame = tk.Frame(self.racine)
-        self.racine.title("Trouver une ville")
         self.coord_result = None  # pour renvoyer le résultat
 
-        self.frame_haut = tk.Frame(self.racine)
+        self.frame_haut = tk.Frame(self.frame, borderwidth=1)
         self.frame_haut.pack()
 
         # créer le widget d'entrée de texte
@@ -41,27 +41,27 @@ class TkGeoLocator:
         self.bouton_valider.pack(side="left")
 
         # créer la zone de texte pour afficher le résultat
-        self.zone_texte = tk.Text(self.racine)
+        self.zone_texte = tk.Text(self.frame)
         self.zone_texte.pack()
 
         # créer le bouton de validation 2
-        self.bouton_selection = tk.Button(self.racine, text="Selection", command=self.on_click_selection)
+        self.bouton_selection = tk.Button(self.frame, text="Selection", command=self.on_click_selection)
         self.bouton_selection.pack()
 
         # créer la zone de texte 2 (quelques lignes)
-        self.zone_texte2 = tk.Text(self.racine, height=3)
+        self.zone_texte2 = tk.Text(self.frame, height=3)
         self.zone_texte2.pack()
 
         # En dessous un Frame avec 3 champs, puis un bouton choisir
-        self.frame2 = tk.Frame(self.racine)
-        self.frame2.pack()
-        self.entry_loc_name = tk.Entry(self.frame2)
+        self.frame_bas = tk.Frame(self.frame, borderwidth=1)
+        self.frame_bas.pack()
+        self.entry_loc_name = tk.Entry(self.frame_bas)
         self.entry_loc_name.pack(side="left")
-        self.entry_loc_lat = tk.Entry(self.frame2)
+        self.entry_loc_lat = tk.Entry(self.frame_bas)
         self.entry_loc_lat.pack(side="left")
-        self.entry_loc_long = tk.Entry(self.frame2)
+        self.entry_loc_long = tk.Entry(self.frame_bas)
         self.entry_loc_long.pack(side="left")
-        self.but_choisir = tk.Button(self.frame2, text="Choisir", command=self.on_click_choose)
+        self.but_choisir = tk.Button(self.frame_bas, text="Choisir", command=self.on_click_choose)
         self.but_choisir.pack(side="left")
 
         # raccourcis clavier
@@ -106,7 +106,7 @@ if __name__ == '__main__':
 
     root = tk.Tk()
     root.title("Chercher une localité")
-    app = TkGeoLocator(master=root)
+    app = TkGeoLocator(tk_master=root)
 
     # lancer la boucle principale de l'interface graphique
     root.mainloop()
