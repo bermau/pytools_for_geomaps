@@ -34,7 +34,7 @@ class MapApp:
     def __init__(self, master):
         self.master = master
         self.frame = tk.Frame(self.master)
-        self.master.title("Mes jolies cartes de géographie")
+        self.master.title("Mes cartes de géographie")
         self.resultat_deuxieme_fenetre = None
         # Country selector
         self.label_country = tk.Label(self.frame, text="Pays :")

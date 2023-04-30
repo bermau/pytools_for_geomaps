@@ -50,7 +50,7 @@ class Mapper:
         self.villes = points
 
     def creer_carte(self):
-        # créer une carte basée sur les coordonnées du pays
+        # Créer une carte basée sur les coordonnées du pays.
         # J'ai ajouté deux nouveaux paramètres à la fonction Basemap pour spécifier la projection de la carte (
         # projection='merc') et les coordonnées du centre de la carte (lat_0 = 54.5, lon_0 = -4.36). Ces paramètres
         # permettent d'ajuster la projection de la carte pour mieux s'adapter aux dimensions de l'Angleterre et
@@ -90,9 +90,6 @@ class Mapper:
                     if location is not None:
                         coord = (location[0], location[1])
                         self.villes[nom_ville]['coord'] = coord
-
-            print("Avant de placer les villes, voici les données de self.villes")
-            pprint(self.villes)
 
             # ajouter des marqueurs pour chaque ville avec leur nom
             for nom_ville in self.villes:
