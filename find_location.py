@@ -4,9 +4,11 @@ Trouve un emplacement sur Nominatim à partir d'une saisie de l'utilisateur.
 
 from geopy import Nominatim
 
+
 def find_location(query):
     """
-    Renvoie une liste de tuples contenant le nom, les coordonnées et le type de chaque lieu correspondant à la requête donnée.
+    Renvoie une liste de tuples contenant le nom, les coordonnées et le type de chaque lieu correspondant à la
+    requête donnée.
     """
 
     geolocator = Nominatim(user_agent="my-app")
