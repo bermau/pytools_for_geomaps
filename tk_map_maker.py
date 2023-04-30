@@ -33,28 +33,37 @@ def ajouter_ville(triplet):
 class MapApp:
     def __init__(self, master):
         self.master = master
-        self.frame = tk.Frame(self.master)
         self.master.title("Mes cartes de géographie")
         self.resultat_deuxieme_fenetre = None
-        # Country selector
-        self.label_country = tk.Label(self.frame, text="Pays :")
-        self.label_country.pack()
-        self.selected_country = tk.StringVar(value="Angleterre")
-        self.option_country = tk.OptionMenu(self.frame, self.selected_country,
-                                            "Angleterre", "France", "Espagne")
-        self.option_country.pack()
 
-        self.button_map = tk.Button(self.frame, text="Afficher la carte", command=self.display_map)
-        self.button_map.pack(side="right")
+        self.frame = tk.Frame(self.master)
+        # Country selector, dans son frame
+        self.frame_haut = tk.Frame(self.frame)
+        self.frame_haut.pack(side="top")
+        self.label_country = tk.Label(self.frame_haut, text="Pays :")
+        self.label_country.pack(side="left")
+        self.selected_country = tk.StringVar(value="Angleterre")
+        self.option_country = tk.OptionMenu(self.frame_haut, self.selected_country,
+                                            "Angleterre", "France", "Espagne")
+        self.option_country.pack(side="left")
+
+        # Ajouter un frame à droite pour y placer des boutons
+        self.fr_right = tk.Frame(self.frame)
+        self.fr_right.pack(side="right")
+
+        # Créer un bouton pour ouvrir une fenêtre pour choisir un lieu à ajouter.
+        # self.frame_bas = tk.Frame(self.frame)
+        # self.frame_bas.pack()
+        self.button_locator = tk.Button(self.fr_right, text="Ajouter un lieu", command=self.ouvrir_fen_deux)
+        self.button_locator.pack(side="top", expand=True, fill="x")
+
+        # Créer un bouton pour Afficher la carte
+        self.button_map = tk.Button(self.fr_right, text="Afficher la carte", command=self.display_map)
+        self.button_map.pack(side="bottom")
 
         self.canvas = tk.Canvas(self.frame, width=800, height=600)
         self.canvas.pack(side="bottom")
 
-        # Créer un bouton pour ouvrir une fenêtre pour choisir un lieu à ajouter.
-        self.frame_bas = tk.Frame(self.frame)
-        self.frame_bas.pack()
-        self.button_locator = tk.Button(self.frame_bas, text="Ajouter un lieu", command=self.ouvrir_fen_deux)
-        self.button_locator.pack(side="right")
         self.frame.pack()
 
     def display_map(self):
