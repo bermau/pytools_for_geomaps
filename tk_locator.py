@@ -29,8 +29,8 @@ class TkGeoLocator:
         self.frame = tk.Frame(self.racine)
         self.coord_result = None  # pour renvoyer le résultat
 
-        self.frame_haut = tk.Frame(self.frame, borderwidth=1)
-        self.frame_haut.pack()
+        self.frame_haut = tk.Frame(self.frame, bg= "grey", borderwidth=2)
+        self.frame_haut.pack(expand=True, fill="both")
 
         # créer le widget d'entrée de texte
         self.entree_texte = tk.Entry(self.frame_haut)
@@ -52,16 +52,18 @@ class TkGeoLocator:
         self.zone_texte2 = tk.Text(self.frame, height=3)
         self.zone_texte2.pack()
 
-        # En dessous un Frame avec 3 champs, puis un bouton choisir
-        self.frame_bas = tk.Frame(self.frame, borderwidth=1)
-        self.frame_bas.pack()
-        self.entry_loc_name = tk.Entry(self.frame_bas)
+        # En dessous un Frame avec 3 champs, puis un bouton choisir.
+        self.frame_bas = tk.Frame(self.frame, borderwidth=1, bg="grey")
+        self.frame_bas.pack(expand=True, fill="x")
+        self.frame_pour_centrer = tk.Frame(self.frame_bas)
+        self.frame_pour_centrer.pack()
+        self.entry_loc_name = tk.Entry(self.frame_pour_centrer)
         self.entry_loc_name.pack(side="left")
-        self.entry_loc_lat = tk.Entry(self.frame_bas)
+        self.entry_loc_lat = tk.Entry(self.frame_pour_centrer)
         self.entry_loc_lat.pack(side="left")
-        self.entry_loc_long = tk.Entry(self.frame_bas)
+        self.entry_loc_long = tk.Entry(self.frame_pour_centrer)
         self.entry_loc_long.pack(side="left")
-        self.but_choisir = tk.Button(self.frame_bas, text="Choisir", command=self.on_click_choose)
+        self.but_choisir = tk.Button(self.frame_pour_centrer, text="Choisir", command=self.on_click_choose)
         self.but_choisir.pack(side="left")
 
         # raccourcis clavier
