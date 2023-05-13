@@ -43,11 +43,12 @@ def load_geocache(fname='geo_cache.pickle'):
 
 class Mapper:
 
-    def __init__(self, country, title, points):
+    def __init__(self, country, title, points, etopo=False):
         self.map = None
         self.country = country
         self.title = title
         self.villes = points
+        self.etopo = etopo
 
     def creer_carte(self):
         # Créer une carte basée sur les coordonnées du pays.
@@ -77,6 +78,10 @@ class Mapper:
             # Ajouter les limites administratives de la région Auvergne
             file = 'data/regions_france/regions-20180101-shp/regions-20180101'
             self.map.readshapefile(file, 'AUVERGNE', linewidth=1.5, color='black')
+
+        # Ajouter le relief
+        if self.etopo:
+            self.map.etopo()
 
         # ajouter un titre général à la carte
         plt.title(self.title)
