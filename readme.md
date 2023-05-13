@@ -17,3 +17,7 @@ Quand je lis un livre, j'aime savoir où sont les villes décrites. Je voulais r
 ```
 python3  tk_map_maker.py
 ```
+
+## Licence
+
+les cartes des régions de France sont issue de OpenStreetMap ("© les contributeurs d'OpenStreetMap sous licence ODbL").

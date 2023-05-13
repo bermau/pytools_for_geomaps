@@ -70,8 +70,8 @@ class Mapper:
                                lat_0=39, lon_0=-3)
 
         # dessiner les côtes et les frontières
-        self.map.drawcoastlines(linewidth=0.5)
-        self.map.drawcountries(linewidth=0.5)
+        self.map.drawcoastlines()  # tester option : linewidth=0.5
+        self.map.drawcountries()
         self.map.drawrivers(color='b')
 
         # ajouter un titre général à la carte
