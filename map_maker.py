@@ -73,6 +73,10 @@ class Mapper:
         self.map.drawcoastlines()  # tester option : linewidth=0.5
         self.map.drawcountries()
         self.map.drawrivers(color='b')
+        if self.country in ["France", 'fr']:
+            # Ajouter les limites administratives de la région Auvergne
+            file = 'data/regions_france/regions-20180101-shp/regions-20180101'
+            self.map.readshapefile(file, 'AUVERGNE', linewidth=1.5, color='black')
 
         # ajouter un titre général à la carte
         plt.title(self.title)
