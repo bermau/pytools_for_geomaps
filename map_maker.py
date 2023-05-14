@@ -74,10 +74,19 @@ class Mapper:
         self.map.drawcoastlines()  # tester option : linewidth=0.5
         self.map.drawcountries()
         self.map.drawrivers(color='b')
+        # Autres à tester :
+        # self.map.drawmapboundary(fill_color='pink')
+        # self.map.fillcontinents(color='#ddaa66',lake_color='aqua')
+
         if self.country in ["France", 'fr']:
             # Ajouter les limites administratives de la région Auvergne
             file = 'data/regions_france/regions-20180101-shp/regions-20180101'
-            self.map.readshapefile(file, 'AUVERGNE', linewidth=1.5, color='black')
+            self.map.readshapefile(file, 'french_regions', linewidth=1.5, color='black', drawbounds = False)
+
+            for info, shape in zip(self.map.french_regions_info, self.map.french_regions):
+                if info['SHAPENUM'] == 18:
+                    x, y = zip(*shape)
+                    self.map.plot(x, y, marker=None, color='blue')
 
         # Ajouter le relief
         if self.etopo:
@@ -156,10 +165,10 @@ if __name__ == '__main__':
     }
 
 
-
     print(f"geocode_cache = {geocode_cache}")
 
-    map = Mapper(country='en', title="Quelques villes d'Angleterre concernant W.S. Churchill", points=villes)
+    # map = Mapper(country='en', title="Quelques villes d'Angleterre concernant W.S. Churchill", points=villes)
+    map = Mapper(country='fr', title="France", points=villes)
     map.creer_carte()
     map.dessine_villes()
 
