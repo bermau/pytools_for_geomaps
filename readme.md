@@ -19,5 +19,4 @@ python3  tk_map_maker.py
 ```
 
 ## Licence
-
-les cartes des régions de France sont issue de OpenStreetMap ("© les contributeurs d'OpenStreetMap sous licence ODbL").
+Les cartes des régions de France sont issue de OpenStreetMap"© les contributeurs d'OpenStreetMap sous licence ODbL".
