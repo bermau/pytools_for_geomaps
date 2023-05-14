@@ -63,6 +63,7 @@ class MapApp:
         # Créer une variable de contrôle pour la case à cocher
         # Créer une case à cocher et la lier à la variable de contrôle. selectcolor set for my display on Ubuntu Mate
         self.etopo_var = tk.BooleanVar()
+        # ci dessous, je n'arrive pas à faire en sorte que la coche soit noire sur fond blanc. Mas coche reste blanche.
         check_button = tk.Checkbutton(self.fr_right, text="etopo", variable=self.etopo_var, selectcolor='grey')
         check_button.pack()
 
