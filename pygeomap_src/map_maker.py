@@ -1,3 +1,4 @@
+import os.path
 import pickle
 import matplotlib.pyplot as plt
 from mpl_toolkits.basemap import Basemap
@@ -80,7 +81,7 @@ class Mapper:
 
         if self.country in ["France", 'fr']:
             # Ajouter les limites administratives de la région Auvergne
-            file = 'data/regions_france/regions-20180101-shp/regions-20180101'
+            file = os.path.abspath('./data/regions_france/regions-20180101-shp/regions-20180101')
             self.map.readshapefile(file, 'french_regions', linewidth=1.5, color='black', drawbounds = False)
 
             for info, shape in zip(self.map.french_regions_info, self.map.french_regions):
@@ -149,10 +150,7 @@ except:
     print(f"Pas de fichier {cache_name}")
     geocode_cache = {}
 
-if __name__ == '__main__':
-    # On paramètre les villes avec un dictionnaire. Par défaut recherche dans OpenStreetMap.
-    # On peut indiquer la position GPS, et la position de l'étiquette.
-    villes = {
+villes_examples = {
         'Londres': {'label': "NE"},
         # 'Cambridge': {'label': "NE"},
         # 'Manchester': {'label': "NE"},
@@ -164,11 +162,16 @@ if __name__ == '__main__':
         'Ville quelconque': {'coord': (53.5074, -1.2578), 'label': 'E'},
     }
 
+if __name__ == '__main__':
+    # On paramètre les villes avec un dictionnaire. Par défaut recherche dans OpenStreetMap.
+    # On peut indiquer la position GPS, et la position de l'étiquette.
+
+
 
     print(f"geocode_cache = {geocode_cache}")
 
     # map = Mapper(country='en', title="Quelques villes d'Angleterre concernant W.S. Churchill", points=villes)
-    map = Mapper(country='fr', title="France", points=villes)
+    map = Mapper(country='fr', title="France", points=villes_examples)
     map.creer_carte()
     map.dessine_villes()
 
