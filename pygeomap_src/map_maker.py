@@ -81,7 +81,7 @@ class Mapper:
 
         if self.country in ["France", 'fr']:
             # Ajouter les limites administratives de la région Auvergne
-            file = os.path.abspath('./data/regions_france/regions-20180101-shp/regions-20180101')
+            file = os.path.abspath('../data/regions_france/regions-20180101-shp/regions-20180101')
             self.map.readshapefile(file, 'french_regions', linewidth=1.5, color='black', drawbounds = False)
 
             for info, shape in zip(self.map.french_regions_info, self.map.french_regions):
