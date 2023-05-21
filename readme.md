@@ -21,10 +21,5 @@ python3  tk_map_maker.py
 ```
 
 
-## Examples : 
-![Spain_mod.svg](examples_of_results%2FSpain_mod.svg)
-
-![France_modif.svg](examples_of_results%2FFrance_modif.svg)
-
 ## Licence
-Les cartes des régions de France sont issue de OpenStreetMap"© les contributeurs d'OpenStreetMap sous licence ODbL".
+Les cartes des régions de France sont issues de OpenStreetMap"© les contributeurs d'OpenStreetMap sous licence ODbL".
