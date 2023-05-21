@@ -1,4 +1,3 @@
-# 
 # A program to create geographical maps
 I created this program to generate geographical maps that represent a country and its cities. 
 
@@ -7,7 +6,6 @@ I created this program to generate geographical maps that represent a country an
   * Allows the user to select a country
   * Enables the user to add cities
   * Outputs the map in SVG format.
-
 ![](/home/bertrand/important/prog_local/PW_31_carte_geographie_svg/docs/images/churchill.svg)
 
 ## Présentation en Français
