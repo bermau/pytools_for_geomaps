@@ -3,6 +3,9 @@ import pickle
 import matplotlib.pyplot as plt
 from mpl_toolkits.basemap import Basemap
 from geopy.geocoders import Nominatim
+
+from tools.explore_shp_file import describe_shp_info
+
 from pprint import pprint
 
 # Création d'un cache pour stocker les résultats géocodés
