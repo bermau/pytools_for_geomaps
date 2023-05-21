@@ -85,10 +85,10 @@ class MapApp:
         map.dessine_villes()
         map.save_svg()
 
-        drawing = svg2rlg("./maps/tempo.svg")
-        renderPM.drawToFile(drawing, "./maps/temp.png", fmt="PNG")
+        drawing = svg2rlg("../maps/tempo.svg")
+        renderPM.drawToFile(drawing, "../maps/temp.png", fmt="PNG")
 
-        img = Image.open("./maps/temp.png")
+        img = Image.open("../maps/temp.png")
         photo = ImageTk.PhotoImage(img)
         self.canvas.create_image(0, 0, anchor="nw", image=photo)
         self.canvas.image = photo

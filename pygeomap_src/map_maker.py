@@ -139,10 +139,10 @@ class Mapper:
                     print('Position inconnue')
 
     def save_svg(self):
-        plt.savefig("./maps/tempo.svg")
-        plt.savefig(f"./maps/{self.country}.svg")
+        plt.savefig("../maps/tempo.svg")
+        plt.savefig(f"../maps/{self.country}.svg")
 
-cache_name = './maps/geo_cache.pickle'
+cache_name = '../maps/geo_cache.pickle'
 try:
     geocode_cache = load_geocache(cache_name)
     print("J'ai chargé le cache des données géographiques.")
