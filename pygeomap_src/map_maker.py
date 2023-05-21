@@ -1,9 +1,11 @@
 import os.path
+import sys
 import pickle
 import matplotlib.pyplot as plt
 from mpl_toolkits.basemap import Basemap
 from geopy.geocoders import Nominatim
 
+sys.path.append("..")
 from tools.explore_shp_file import describe_shp_info
 
 from pprint import pprint

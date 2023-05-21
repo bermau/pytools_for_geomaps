@@ -7,6 +7,11 @@ from PIL import Image, ImageTk
 from map_maker import Mapper  # , geocode_cache
 from tk_locator import TkGeoLocator
 
+import sys
+
+
+
+
 villes = {
     'Londres': {'label': "NE"},
     # 'Cambridge': {'label': "NE"},
