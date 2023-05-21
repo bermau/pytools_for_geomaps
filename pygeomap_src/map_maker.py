@@ -3,6 +3,9 @@ import pickle
 import matplotlib.pyplot as plt
 from mpl_toolkits.basemap import Basemap
 from geopy.geocoders import Nominatim
+
+from tools.explore_shp_file import describe_shp_info
+
 from pprint import pprint
 
 # Création d'un cache pour stocker les résultats géocodés
@@ -44,12 +47,13 @@ def load_geocache(fname='geo_cache.pickle'):
 
 class Mapper:
 
-    def __init__(self, country, title, points, etopo=False):
+    def __init__(self, country, title, points, etopo=False, region=None):
         self.map = None
         self.country = country
         self.title = title
         self.villes = points
         self.etopo = etopo
+        self.region = region
 
     def creer_carte(self):
         # Créer une carte basée sur les coordonnées du pays.
@@ -79,15 +83,7 @@ class Mapper:
         # self.map.drawmapboundary(fill_color='pink')
         # self.map.fillcontinents(color='#ddaa66',lake_color='aqua')
 
-        if self.country in ["France", 'fr']:
-            # Ajouter les limites administratives de la région Auvergne
-            file = os.path.abspath('../data/regions_france/regions-20180101-shp/regions-20180101')
-            self.map.readshapefile(file, 'french_regions', linewidth=1.5, color='black', drawbounds = False)
 
-            for info, shape in zip(self.map.french_regions_info, self.map.french_regions):
-                if info['SHAPENUM'] == 18:
-                    x, y = zip(*shape)
-                    self.map.plot(x, y, marker=None, color='blue')
 
         # Ajouter le relief
         if self.etopo:
@@ -137,6 +133,29 @@ class Mapper:
                     plt.text(position[0], position[1], nom_ville, fontsize=10, ha=position[2], va=position[3], color='red')
                 else:
                     print('Position inconnue')
+
+    def ajout_regions(self, region=None):
+        """
+
+        :param region:
+        :return:
+        example : ajout_regions(('SHAPENUM', 18))
+                  ajout_regions(('nom', 'Occitanie'))
+        """
+        une_region = region
+        if self.country in ["France", 'fr']:
+            # Ajouter les limites administratives de la région Auvergne
+            file = os.path.abspath('../data/regions_france/regions-20180101-shp/regions-20180101')
+            self.map.readshapefile(file, 'french_regions', linewidth=1.5, color='black', drawbounds = False)
+            describe_shp_info(self.map.french_regions_info)
+            if isinstance(une_region, tuple):
+                code = une_region[0]
+                valeur = une_region[1]
+
+                for info, shape in zip(self.map.french_regions_info, self.map.french_regions):
+                    if info[code] == valeur:
+                        x, y = zip(*shape)
+                        self.map.plot(x, y, marker=None, color='blue')
 
     def save_svg(self):
         plt.savefig("../maps/tempo.svg")
