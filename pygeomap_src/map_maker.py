@@ -111,7 +111,6 @@ class Mapper:
             # ajouter des marqueurs pour chaque ville avec leur nom
             for nom_ville in self.villes:
                 coord = self.villes[nom_ville]["coord"]
-                print(f"coord vaut {coord}")
                 long, lat = self.map(coord[1], coord[0])
 
                 # Attention : plot attend x puis y (soit longitude puis latitude).
