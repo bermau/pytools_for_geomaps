@@ -1,5 +1,6 @@
 """Tk interface to create maps."""
 import tkinter as tk
+from tkinter import ttk
 from svglib.svglib import svg2rlg
 from reportlab.graphics import renderPM
 from PIL import Image, ImageTk
@@ -28,7 +29,8 @@ def ajouter_ville(triplet):
     villes[name] = {'coord' : (float(latitude), float(longitude))}
     print(f"Villes devient {villes}")
 
-# J'utilise une classe qui ne dérive pas d'une classe de tkinter.
+
+# J'utilise une classe qui ne dérive pas d'une classe de tkinter, comme préconisé par :
 # https://stackoverflow.com/questions/16115378/tkinter-example-code-for-multiple-windows-why-wont-buttons-load-correctly
 class MapApp:
     def __init__(self, master):
@@ -56,6 +58,14 @@ class MapApp:
         # self.frame_bas.pack()
         self.button_locator = tk.Button(self.fr_right, text="Ajouter un lieu", command=self.ouvrir_fen_deux)
         self.button_locator.pack(side="top", expand=True, fill="x")
+        # Un bouton pour selectionner options etopo
+
+        # Créer une variable de contrôle pour la case à cocher
+        # Créer une case à cocher et la lier à la variable de contrôle. selectcolor set for my display on Ubuntu Mate
+        self.etopo_var = tk.BooleanVar()
+        # ci dessous, je n'arrive pas à faire en sorte que la coche soit noire sur fond blanc. Mas coche reste blanche.
+        check_button = tk.Checkbutton(self.fr_right, text="etopo", variable=self.etopo_var, selectcolor='grey')
+        check_button.pack()
 
         # Créer un bouton pour Afficher la carte
         self.button_map = tk.Button(self.fr_right, text="Afficher la carte", command=self.display_map)
@@ -70,15 +80,15 @@ class MapApp:
         """Affiche la carte avec les villes"""
         country = self.selected_country.get()
 
-        map = Mapper(country, country, points=villes)
+        map = Mapper(country, country, points=villes, etopo=self.etopo_var.get())
         map.creer_carte()
         map.dessine_villes()
         map.save_svg()
 
-        drawing = svg2rlg("./maps/tempo.svg")
-        renderPM.drawToFile(drawing, "./maps/temp.png", fmt="PNG")
+        drawing = svg2rlg("../maps/tempo.svg")
+        renderPM.drawToFile(drawing, "../maps/temp.png", fmt="PNG")
 
-        img = Image.open("./maps/temp.png")
+        img = Image.open("../maps/temp.png")
         photo = ImageTk.PhotoImage(img)
         self.canvas.create_image(0, 0, anchor="nw", image=photo)
         self.canvas.image = photo
@@ -103,5 +113,14 @@ class MapApp:
 
 if __name__ == '__main__':
     root = tk.Tk()
+
+    # needed for my ubuntu mate theme
+    # root.option_add('*foreground', 'red')  # set all tk widgets' foreground to red
+    # # root.option_add('*activeForeground', 'red')  # set all tk widgets' foreground to red
+    # style = ttk.Style(root)
+    # style.configure('TButton', foreground='red')
+    # style.configure('TCheckbutton', foreground='yellow')
+    #
+
     app = MapApp(root)
     root.mainloop()

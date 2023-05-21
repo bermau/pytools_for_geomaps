@@ -1,8 +1,6 @@
 # 
 # A program to create geographical maps
-I created this p
-
-rogram to generate geographical maps that represent a country and its cities. 
+I created this program to generate geographical maps that represent a country and its cities. 
 
   * Written in Python3 and Tkinter
   * Uses geopy
@@ -20,7 +18,11 @@ Quand je lis un livre, j'aime savoir où sont les villes décrites. Je voulais r
 python3  tk_map_maker.py
 ```
 
+
 ## Examples : 
 ![Spain_mod.svg](examples_of_results%2FSpain_mod.svg)
 
 ![France_modif.svg](examples_of_results%2FFrance_modif.svg)
+
+## Licence
+Les cartes des régions de France sont issue de OpenStreetMap"© les contributeurs d'OpenStreetMap sous licence ODbL".

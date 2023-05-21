@@ -1,7 +1,11 @@
+import os.path
 import pickle
 import matplotlib.pyplot as plt
 from mpl_toolkits.basemap import Basemap
 from geopy.geocoders import Nominatim
+
+from tools.explore_shp_file import describe_shp_info
+
 from pprint import pprint
 
 # Création d'un cache pour stocker les résultats géocodés
@@ -14,7 +18,7 @@ geolocator = Nominatim(user_agent="my_app")
 # utilisé dans les systèmes de navigation GPS et dans les outils de cartographie. Fonction pour récupérer les
 # coordonnées d'une ville en utilisant le cache. Attention au fait que plot de matplolib attend par défaut l'ordre
 # inverse.
-def get_coordinates(city ):
+def get_coordinates(city):
     if city in geocode_cache:
         # Récupérer les coordonnées à partir du cache
         return geocode_cache[city]
@@ -43,11 +47,13 @@ def load_geocache(fname='geo_cache.pickle'):
 
 class Mapper:
 
-    def __init__(self, country, title, points):
+    def __init__(self, country, title, points, etopo=False, region=None):
         self.map = None
         self.country = country
         self.title = title
         self.villes = points
+        self.etopo = etopo
+        self.region = region
 
     def creer_carte(self):
         # Créer une carte basée sur les coordonnées du pays.
@@ -70,18 +76,29 @@ class Mapper:
                                lat_0=39, lon_0=-3)
 
         # dessiner les côtes et les frontières
-        self.map.drawcoastlines(linewidth=0.5)
-        self.map.drawcountries(linewidth=0.5)
+        self.map.drawcoastlines()  # tester option : linewidth=0.5
+        self.map.drawcountries()
         self.map.drawrivers(color='b')
+        # Autres à tester :
+        # self.map.drawmapboundary(fill_color='pink')
+        # self.map.fillcontinents(color='#ddaa66',lake_color='aqua')
+
+        # Ajouter le relief
+        if self.etopo:
+            self.map.etopo()
+        # Ajouter la carte des régions si possible
+        if self.country in ["France", 'fr']:
+            # Ajouter les limites administratives de la région Auvergne
+            file = os.path.abspath('../data/regions_france/regions-20180101-shp/regions-20180101')
+            self.map.readshapefile(file, 'french_regions', linewidth=1.5, color='black', drawbounds=False)
+            describe_shp_info(self.map.french_regions_info)
 
         # ajouter un titre général à la carte
         plt.title(self.title)
 
-
     def dessine_villes(self):
         """Affiche les villes et leur label"""
         # extraire les coordonnées de chaque ville depuis la base de données OpenStreetMap
-
         if self.villes:
             for nom_ville in self.villes:
                 coordinates = self.villes[nom_ville].get('coord', None)
@@ -94,11 +111,10 @@ class Mapper:
             # ajouter des marqueurs pour chaque ville avec leur nom
             for nom_ville in self.villes:
                 coord = self.villes[nom_ville]["coord"]
-                print(f"coord vaut {coord}")
                 long, lat = self.map(coord[1], coord[0])
 
                 # Attention : plot attend x puis y (soit longitude puis latitude).
-                self.map.plot(long, lat,  'ro', markersize=5)
+                self.map.plot(long, lat, 'ro', markersize=5)
                 distance = 0.05 * (self.map.urcrnry - self.map.llcrnry)
                 pos_label = self.villes[nom_ville].get('label', 'N')
 
@@ -115,15 +131,50 @@ class Mapper:
 
                 if pos_label in positions:
                     position = positions[pos_label]
-                    plt.text(position[0], position[1], nom_ville, fontsize=10, ha=position[2], va=position[3], color='red')
+                    plt.text(position[0], position[1], nom_ville, fontsize=10, ha=position[2], va=position[3],
+                             color='red')
                 else:
                     print('Position inconnue')
 
-    def save_svg(self):
-        plt.savefig("./maps/tempo.svg")
-        plt.savefig(f"./maps/{self.country}.svg")
+    def ajout_regions(self, regions=None):
+        """
 
-cache_name = './maps/geo_cache.pickle'
+        :param regions: tuple or a list of tuples
+            examples of tuples : ('nom', 'Occitanie', 'red', 0.5)
+                                ('code_insee', 93, #DA4A32, 0.6)
+        :return:
+        example : ajout_regions(('SHAPENUM', 18))
+                  ajout_regions(('nom', 'Occitanie'))
+        """
+        if isinstance(regions, list):
+            for one_region in regions:
+                self.ajout_regions(one_region)
+
+        else:
+            une_region = regions
+            if self.country in ["France", 'fr']:
+                if isinstance(une_region, tuple):
+                    code = une_region[0]
+                    valeur = une_region[1]
+                    try:
+                        couleur = une_region[2]
+                    except IndexError:
+                        couleur = 'blue'
+                    try:
+                        alpha = une_region[3]
+                    except IndexError:
+                        alpha = 1
+                    for info, shape in zip(self.map.french_regions_info, self.map.french_regions):
+                        if info[code] == valeur:
+                            x, y = zip(*shape)
+                            self.map.plot(x, y, marker=None, color=couleur, alpha=alpha)
+
+    def save_svg(self):
+        plt.savefig("../maps/tempo.svg")
+        plt.savefig(f"../maps/{self.country}.svg")
+
+
+cache_name = '../maps/geo_cache.pickle'
 try:
     geocode_cache = load_geocache(cache_name)
     print("J'ai chargé le cache des données géographiques.")
@@ -131,29 +182,28 @@ except:
     print(f"Pas de fichier {cache_name}")
     geocode_cache = {}
 
+villes_examples = {
+    'Londres': {'label': "NE"},
+    # 'Cambridge': {'label': "NE"},
+    # 'Manchester': {'label': "NE"},
+    'Blenheim Palace': {'label': "SW"},
+    'Chartwell': {'label': "SW"},
+
+    # 'Birmingham': {'label': "S"},
+    # Ajout d'une ville avec des coordonnées GPS (latitude, longitude)
+    'Ville quelconque': {'coord': (53.5074, -1.2578), 'label': 'E'},
+}
+
 if __name__ == '__main__':
     # On paramètre les villes avec un dictionnaire. Par défaut recherche dans OpenStreetMap.
     # On peut indiquer la position GPS, et la position de l'étiquette.
-    villes = {
-        'Londres': {'label': "NE"},
-        # 'Cambridge': {'label': "NE"},
-        # 'Manchester': {'label': "NE"},
-        'Blenheim Palace': {'label': "SW"},
-        'Chartwell': {'label': "SW"},
-
-        # 'Birmingham': {'label': "S"},
-        # Ajout d'une ville avec des coordonnées GPS (latitude, longitude)
-        'Ville quelconque': {'coord': (53.5074, -1.2578), 'label': 'E'},
-    }
-
-
 
     print(f"geocode_cache = {geocode_cache}")
 
-    map = Mapper(country='en', title="Quelques villes d'Angleterre concernant W.S. Churchill", points=villes)
+    # map = Mapper(country='en', title="Quelques villes d'Angleterre concernant W.S. Churchill", points=villes)
+    map = Mapper(country='fr', title="France", points=villes_examples)
     map.creer_carte()
     map.dessine_villes()
 
     # afficher la carte d'Angleterre
     plt.show()
-
