@@ -49,10 +49,13 @@ def load_geocache(fname='geo_cache.pickle'):
 
 class Mapper:
 
-    def __init__(self, country, title, points, etopo=False, region=None):
+    def __init__(self, country, title=None, points=None, etopo=False, region=None):
         self.map = None
         self.country = country
-        self.title = title
+        if title is None:
+            self.title = country
+        else:
+            self.title = title
         self.villes = points
         self.etopo = etopo
         self.region = region
@@ -81,7 +84,6 @@ class Mapper:
             bounding_box = data.raw['boundingbox']
 
             south, north, west, east = map(float, bounding_box)
-            print("tit")
             # ll stand klower letf ,
             self.map = Basemap(llcrnrlon=west, llcrnrlat=south, urcrnrlon=east, urcrnrlat=north, resolution='c',
                                projection='merc'
@@ -102,7 +104,6 @@ class Mapper:
             data = geolocator.geocode(self.country)
             bounding_box = data.raw['boundingbox']
             south, north, west, east = map(float, bounding_box)
-            print("tit")
             # ll stands for lower left , ur for upperright
             self.map = Basemap(llcrnrlon=west, llcrnrlat=south, urcrnrlon=east, urcrnrlat=north, resolution='c',
                                projection='merc'
@@ -137,7 +138,7 @@ class Mapper:
             for nom_ville in self.villes:
                 coordinates = self.villes[nom_ville].get('coord', None)
                 if coordinates is None:
-                    location = get_coordinates(nom_ville + ', UK')
+                    location = get_coordinates(nom_ville)
                     if location is not None:
                         coord = (location[0], location[1])
                         self.villes[nom_ville]['coord'] = coord
@@ -236,7 +237,9 @@ if __name__ == '__main__':
 
     # my_map = Mapper(country='en', title="Quelques villes d'Angleterre concernant W.S. Churchill", points=villes)
     # my_map = Mapper(country='fr', title="France", points=villes_examples)
-    my_map = Mapper(country='Vietnam', title="Le Cambodge", points=villes_examples)
+    # my_map = Mapper(country='Vietnam', title="Le Cambodge", points=villes_examples)
+    my_map = Mapper(country='China')
+
     my_map.creer_carte()
     my_map.dessine_villes()
 
