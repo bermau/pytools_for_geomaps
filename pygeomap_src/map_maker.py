@@ -17,9 +17,9 @@ from pprint import pprint
 geolocator = Nominatim(user_agent="my_app")
 
 # A propos des coordonnées : il est préférable d'utiliser l'ordre (latitude, longitude). C'est l'ordre généralement
-# utilisé dans les systèmes de navigation GPS et dans les outils de cartographie. Fonction pour récupérer les
-# coordonnées d'une ville en utilisant le cache. Attention au fait que plot de matplolib attend par défaut l'ordre
-# inverse.
+# utilisé dans les systèmes de navigation GPS et dans les outils de cartographie.  Attention au fait que plot de
+# matplolib attend par défaut l'ordre inverse.
+# Fonction pour récupérer les coordonnées d'une ville en utilisant le cache.
 def get_coordinates(city):
     if city in geocode_cache:
         # Récupérer les coordonnées à partir du cache
@@ -76,6 +76,38 @@ class Mapper:
             self.map = Basemap(llcrnrlon=-10, llcrnrlat=34, urcrnrlon=4, urcrnrlat=44, resolution='i',
                                projection='merc',
                                lat_0=39, lon_0=-3)
+        elif self.country in ["Chine", 'cn']:
+            data = geolocator.geocode('China')
+            bounding_box = data.raw['boundingbox']
+
+            south, north, west, east = map(float, bounding_box)
+            print("tit")
+            # ll stand klower letf ,
+            self.map = Basemap(llcrnrlon=west, llcrnrlat=south, urcrnrlon=east, urcrnrlat=north, resolution='c',
+                               projection='merc'
+                               # lat_0=39, lon_0=-3
+                               )
+        elif self.country in ["Chine", 'cn']:
+            data = geolocator.geocode('China')
+            bounding_box = data.raw['boundingbox']
+
+            south, north, west, east = map(float, bounding_box)
+            print("tit")
+            # ll stand klower letf ,
+            self.map = Basemap(llcrnrlon=west, llcrnrlat=south, urcrnrlon=east, urcrnrlat=north, resolution='c',
+                               projection='merc'
+                               # lat_0=39, lon_0=-3
+                               )
+        else:
+            data = geolocator.geocode(self.country)
+            bounding_box = data.raw['boundingbox']
+            south, north, west, east = map(float, bounding_box)
+            print("tit")
+            # ll stands for lower left , ur for upperright
+            self.map = Basemap(llcrnrlon=west, llcrnrlat=south, urcrnrlon=east, urcrnrlat=north, resolution='c',
+                               projection='merc'
+                               # lat_0=39, lon_0=-3
+                               )
 
         # dessiner les côtes et les frontières
         self.map.drawcoastlines()  # tester option : linewidth=0.5
@@ -202,10 +234,11 @@ if __name__ == '__main__':
 
     print(f"geocode_cache = {geocode_cache}")
 
-    # map = Mapper(country='en', title="Quelques villes d'Angleterre concernant W.S. Churchill", points=villes)
-    map = Mapper(country='fr', title="France", points=villes_examples)
-    map.creer_carte()
-    map.dessine_villes()
+    # my_map = Mapper(country='en', title="Quelques villes d'Angleterre concernant W.S. Churchill", points=villes)
+    # my_map = Mapper(country='fr', title="France", points=villes_examples)
+    my_map = Mapper(country='Vietnam', title="Le Cambodge", points=villes_examples)
+    my_map.creer_carte()
+    my_map.dessine_villes()
 
-    # afficher la carte d'Angleterre
+    # afficher la carte
     plt.show()
