@@ -10,8 +10,6 @@ from tk_locator import TkGeoLocator
 import sys
 
 
-
-
 villes = {
     'Londres': {'label': "NE"},
     # 'Cambridge': {'label': "NE"},
