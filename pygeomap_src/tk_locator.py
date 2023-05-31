@@ -73,14 +73,16 @@ class TkGeoLocator:
 
     # fonction qui est appelée quand on appuie sur le bouton
     def valider_entree(self):
-        """On a saisi Londres"""
+        """On a saisi un nom de ville ou de pays"""
         texte = self.entree_texte.get()
         result = find_locations(texte)
         print(result)
-        for line in result:
-            print(line)
-            line2 = ",".join(line)
-            self.zone_texte.insert(tk.END, str(line2) + "\n\n")
+        self.zone_texte.delete('1.0', tk.END)  # Clear the text widget
+        if result:
+            for line in result:
+                print(line)
+                line2 = ",".join(line)
+                self.zone_texte.insert(tk.END, str(line2) + "\n\n")
 
     def on_click_selection(self):
         """Récupérer la sélection dans la zone de texte 1. On a souligné une ligne.
